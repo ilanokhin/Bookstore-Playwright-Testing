@@ -7,7 +7,7 @@ on:
       - master
 
 jobs:
-  ui-tests:
+  safari-tests:
     name: Параллельные автотесты на Safari
     runs-on: ubuntu-latest
 
@@ -15,12 +15,12 @@ jobs:
       - name: Проверка кода репозитория
         uses: actions/checkout@v6
 
-      #- name: Сборка Docker образа
-        #run: docker build -t python-playwright-safari-testing:latest .
-        #continue-on-error: true
+      - name: Сборка Docker образа
+        run: docker build -t python-playwright-safari-testing:latest -f ./Dockerfile_for_safari .
+        continue-on-error: true
 
       - name: Загрузка образа с Docker Hub (если сборка не удалась)
-        #if: failure()
+        if: failure()
         run: |
           docker pull ilanokhin/python-playwright-safari-testing:latest
           docker tag ilanokhin/python-playwright-safari-testing:latest python-playwright-safari-testing:latest
