@@ -1,0 +1,15 @@
+FROM python:3.14-slim
+WORKDIR /docker/project
+COPY requirements.txt .
+
+RUN apt-get update && apt-get install -y --no-install-recommends openjdk-21-jre-headless wget unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN VER=2.38.1 \
+    && wget -T 10 https://github.com/allure-framework/allure2/releases/download/$VER/allure-$VER.zip \
+    && unzip allure-$VER.zip -d /opt/allure && rm allure-$VER.zip \
+    && ln -s /opt/allure/allure-$VER/bin/allure /usr/bin/allure
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+RUN playwright install firefox --with-deps

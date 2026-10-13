@@ -1,0 +1,27 @@
+services:
+  chrome-playwright-tests:
+    image: python-playwright-chrome-testing:latest
+    build:
+      context: .
+      dockerfile: Dockerfile_for_chrome
+    volumes:
+      - .:/docker/project
+    command: /bin/sh -c "pytest --headless || true; allure generate allure-data -c --single-file"
+
+  firefox-playwright-tests:
+    image: python-playwright-firefox-testing:latest
+    build:
+      context: .
+      dockerfile: Dockerfile_for_firefox
+    volumes:
+      - .:/docker/project
+    command: /bin/sh -c "pytest --headless --firefox || true; allure generate allure-data -c --single-file"
+
+  safari-playwright-tests:
+    image: python-playwright-safari-testing:latest
+    build:
+      context: .
+      dockerfile: Dockerfile_for_safari
+    volumes:
+      - .:/docker/project
+    command: /bin/sh -c "pytest --headless --safari || true; allure generate allure-data -c --single-file"
