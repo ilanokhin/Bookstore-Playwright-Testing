@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Сборка Docker образа
-        run: docker build -t python-playwright-safari-testing:latest -f ./Dockerfile_for_safari
+        run: docker build -t python-playwright-safari-testing:latest -f ./Dockerfile_for_safari .
         continue-on-error: true
 
       - name: Загрузка образа с Docker Hub (если сборка не удалась)
