@@ -75,6 +75,19 @@ def browser_page(request: pytest.FixtureRequest) -> Page:
     playwright.stop()
 
 
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item):
+    outcome = yield
+    test = outcome.get_result()
+
+    if test.failed:
+        browser_page = item.funcargs.get("browser_page")
+
+        if browser_page:
+            screenshot = browser_page.screenshot()
+            allure.attach(screenshot, attachment_type=allure.attachment_type.PNG, name="Скриншот")
+
+
 @pytest.fixture
 def fake():
     return Faker()
