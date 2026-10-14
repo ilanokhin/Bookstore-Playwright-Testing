@@ -5,7 +5,7 @@ on:
 
 jobs:
   safari-tests:
-    name: Автотесты на Safari
+    name: Последовательные автотесты на Safari
     runs-on: ubuntu-latest
 
     steps:
