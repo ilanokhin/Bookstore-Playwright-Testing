@@ -85,7 +85,7 @@ def browser_page(request: pytest.FixtureRequest) -> Page:
     yield page
 
     if video:
-        page.wait_for_load_state("load", timeout=TIMEOUT * 1000)
+        page.wait_for_load_state("networkidle", timeout=TIMEOUT * 1000)
         videofile = context.pages[0].video.path()
         context.close()
 

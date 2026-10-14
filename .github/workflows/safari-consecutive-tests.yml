@@ -2,9 +2,6 @@ name: Последовательные автотесты на Safari
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches:
-      - master
 
 jobs:
   safari-tests:
