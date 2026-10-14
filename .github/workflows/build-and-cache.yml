@@ -1,0 +1,46 @@
+name: Сборка и кэширование образов
+
+on:
+  workflow_dispatch:
+
+jobs:
+  tar-archives:
+    name: Создание TAR архивов
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Проверка кода репозитория
+        uses: actions/checkout@v6
+
+      - name: Сборка Docker образа Chrome
+        run: |
+          docker build -t python-playwright-chrome-testing:latest -f ./Dockerfile_for_chrome .
+          docker save python-playwright-chrome-testing:latest > chrome.tar
+
+      - name: Сохранение собранного образа Chrome в кэш
+        uses: actions/cache/save@v6
+        with:
+          path: chrome.tar
+          key: python-playwright-chrome-testing
+
+      - name: Сборка Docker образа Firefox
+        run: |
+          docker build -t python-playwright-firefox-testing:latest -f ./Dockerfile_for_firefox .
+          docker save python-playwright-firefox-testing:latest > firefox.tar
+
+      - name: Сохранение собранного образа Firefox в кэш
+        uses: actions/cache/save@v6
+        with:
+          path: firefox.tar
+          key: python-playwright-firefox-testing
+
+      - name: Сборка Docker образа Safari
+        run: |
+          docker build -t python-playwright-safari-testing:latest -f ./Dockerfile_for_safari .
+          docker save python-playwright-safari-testing:latest > safari.tar
+
+      - name: Сохранение собранного образа Safari в кэш
+        uses: actions/cache/save@v6
+        with:
+          path: safari.tar
+          key: python-playwright-safari-testing

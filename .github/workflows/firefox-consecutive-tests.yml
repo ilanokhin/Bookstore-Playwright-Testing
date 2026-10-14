@@ -5,24 +5,37 @@ on:
 
 jobs:
   firefox-tests:
-    name: Последовательные автотесты на Firefox
+    name: Автотесты на Firefox
     runs-on: ubuntu-latest
 
     steps:
       - name: Проверка кода репозитория
         uses: actions/checkout@v6
 
-      - name: Сборка Docker образа
-        run: docker build -t python-playwright-firefox-testing:latest -f ./Dockerfile_for_firefox .
-        continue-on-error: true
+      - name: Проверка кэша
+        id: cache-restore
+        uses: actions/cache/restore@v6
+        with:
+          path: firefox.tar
+          key: python-playwright-firefox-testing
 
-      - name: Загрузка образа с Docker Hub (если сборка не удалась)
-        if: failure()
+      - name: Загрузка образа в Docker (если был в кэше)
+        if: steps.cache-restore.outputs.cache-hit == 'true'
+        run: docker load -i firefox.tar
+
+      - name: Загрузка образа с Docker Hub (если не было в кэше)
+        id: docker-pull
+        if: steps.cache-restore.outputs.cache-hit != 'true'
         run: |
           docker pull ilanokhin/python-playwright-firefox-testing:latest
           docker tag ilanokhin/python-playwright-firefox-testing:latest python-playwright-firefox-testing:latest
+        continue-on-error: true
 
-      - name: Запуск UI тестов
+      - name: Сборка Docker образа (если загрузка не удалась)
+        if: steps.docker-pull.outcome == 'failure'
+        run: docker build -t python-playwright-firefox-testing:latest -f ./Dockerfile_for_firefox .
+
+      - name: Запуск автотестов
         run: |
           docker run --rm -v ${{ github.workspace }}:/docker/project python-playwright-firefox-testing:latest \
             /bin/sh -c "pytest --headless --firefox"
