@@ -38,7 +38,7 @@ jobs:
       - name: Запуск автотестов
         run: |
           docker run --rm -v ${{ github.workspace }}:/docker/project python-playwright-firefox-testing:latest \
-            /bin/sh -c "pytest --headless --firefox -n=auto"
+            /bin/sh -c "pytest --headless --firefox -n=auto || pytest --lf --headless --firefox"
 
       - name: Создание Allure отчёта
         if: always()

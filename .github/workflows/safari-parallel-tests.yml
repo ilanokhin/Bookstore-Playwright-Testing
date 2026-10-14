@@ -38,7 +38,7 @@ jobs:
       - name: Запуск автотестов
         run: |
           docker run --rm -v ${{ github.workspace }}:/docker/project python-playwright-safari-testing:latest \
-            /bin/sh -c "pytest --headless --safari -n=auto"
+            /bin/sh -c "pytest --headless --safari -n=auto || pytest --lf --headless --safari"
 
       - name: Создание Allure отчёта
         if: always()

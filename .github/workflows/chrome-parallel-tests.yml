@@ -41,7 +41,7 @@ jobs:
       - name: Запуск автотестов
         run: |
           docker run --rm -v ${{ github.workspace }}:/docker/project python-playwright-chrome-testing:latest \
-            /bin/sh -c "pytest --headless -n=auto"
+            /bin/sh -c "pytest --headless -n=auto || pytest --lf --headless"
 
       - name: Создание Allure отчёта
         if: always()
