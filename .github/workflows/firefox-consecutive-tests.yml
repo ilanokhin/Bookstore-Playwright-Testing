@@ -5,7 +5,7 @@ on:
 
 jobs:
   firefox-tests:
-    name: Автотесты на Firefox
+    name: Последовательные автотесты на Firefox
     runs-on: ubuntu-latest
 
     steps:

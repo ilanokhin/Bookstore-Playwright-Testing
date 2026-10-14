@@ -5,7 +5,7 @@ on:
 
 jobs:
   chrome-tests:
-    name: Автотесты на Chrome
+    name: Последовательные автотесты на Chrome
     runs-on: ubuntu-latest
 
     steps:

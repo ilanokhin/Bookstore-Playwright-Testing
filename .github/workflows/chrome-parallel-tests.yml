@@ -8,7 +8,7 @@ on:
 
 jobs:
   chrome-tests:
-    name: Автотесты на Chrome
+    name: Параллельные автотесты на Chrome
     runs-on: ubuntu-latest
 
     steps:
