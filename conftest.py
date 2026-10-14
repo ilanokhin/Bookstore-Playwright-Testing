@@ -1,8 +1,10 @@
+import os
 import pytest
 import allure
 from faker import Faker
 from playwright.sync_api import sync_playwright, Page
 from tests.test_login_page import TestLoginPage
+from config import *
 
 
 def pytest_addoption(parser: pytest.Parser) -> None:
@@ -12,6 +14,7 @@ def pytest_addoption(parser: pytest.Parser) -> None:
     parser.addoption("--disable-images", action="store_true", default=False, help="Отключить картинки")
     parser.addoption("--screenshot-every-time", action="store_true", default=False, help="Делать частые скриншоты")
     parser.addoption("--wait-for-load", action="store_true", default=False, help="Дожидаться загрузки ресурсов")
+    parser.addoption("--video", action="store_true", default=False, help="Записывать видео тестов")
 
 
 @pytest.fixture
@@ -22,6 +25,7 @@ def browser_page(request: pytest.FixtureRequest) -> Page:
     images = not request.config.getoption("--disable-images")
     screenshot_every_time = request.config.getoption("--screenshot-every-time")
     wait_for_load = request.config.getoption("--wait-for-load")
+    video = request.config.getoption("--video") and not hasattr(request.config, 'workerinput')
 
     if safari:
         browser_name = "Apple Safari"
@@ -48,14 +52,23 @@ def browser_page(request: pytest.FixtureRequest) -> Page:
     else:
         browser = playwright.chromium.launch(headless=headless, args=args)
 
-    context = browser.new_context(extra_http_headers={"Accept-Encoding": "gzip, deflate"} if not images else {})
+    headers = {"Accept-Encoding": "gzip, deflate"} if not images else {}
+    window_size = {"width": 1500, "height": 900}
+
+    if video:
+        temp_dir = "tmp"
+        os.mkdir(temp_dir)
+    else:
+        temp_dir = None
+
+    context = browser.new_context(extra_http_headers=headers, record_video_dir=temp_dir, record_video_size=window_size)
 
     if not images:
         context.route("**/*.{png,jpg,jpeg,gif,svg,webp}", lambda route: route.abort())
 
     print(f"\nЗапускается браузер {browser_name}...")
     page = context.new_page()
-    page.set_viewport_size({"width": 1500, "height": 900})
+    page.set_viewport_size(window_size)
 
     if screenshot_every_time:
         page.config = {"screenshot_every_time": True}
@@ -70,6 +83,18 @@ def browser_page(request: pytest.FixtureRequest) -> Page:
     print("\nПроводятся тесты...")
 
     yield page
+
+    if video:
+        page.wait_for_load_state("load", timeout=TIMEOUT * 1000)
+        videofile = context.pages[0].video.path()
+        context.close()
+
+        if os.path.exists(videofile):
+            allure.attach.file(videofile, name="Видео теста", attachment_type=allure.attachment_type.WEBM)
+            os.remove(videofile)
+
+        os.rmdir(temp_dir)
+
     print(f"\nБраузер {browser_name} закрывается...")
     browser.close()
     playwright.stop()
