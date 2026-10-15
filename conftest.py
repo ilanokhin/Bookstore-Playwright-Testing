@@ -13,6 +13,7 @@ def pytest_addoption(parser: pytest.Parser) -> None:
     parser.addoption("--headless", action="store_true", default=False, help="Запуск в фоновом режиме")
     parser.addoption("--disable-images", action="store_true", default=False, help="Отключить картинки")
     parser.addoption("--screenshot-every-time", action="store_true", default=False, help="Делать частые скриншоты")
+    parser.addoption("--wait-for-dom", action="store_true", default=False, help="Ждать только загрузки DOM")
     parser.addoption("--video", action="store_true", default=False, help="Записывать видео тестов")
 
 
@@ -23,6 +24,7 @@ def browser_page(request: pytest.FixtureRequest) -> Page:
     headless = request.config.getoption("--headless")
     images = not request.config.getoption("--disable-images")
     screenshot_every_time = request.config.getoption("--screenshot-every-time")
+    wait_for_dom = request.config.getoption("--wait-for-dom")
     video = request.config.getoption("--video") and not hasattr(request.config, 'workerinput')
 
     if safari:
@@ -66,12 +68,19 @@ def browser_page(request: pytest.FixtureRequest) -> Page:
 
     print(f"\nЗапускается браузер {browser_name}...")
     page = context.new_page()
-    page.set_viewport_size(window_size)
+
+    if not headless:
+        page.set_viewport_size(window_size)
 
     if screenshot_every_time:
         page.config = {"screenshot_every_time": True}
     else:
         page.config = {"screenshot_every_time": False}
+
+    if wait_for_dom:
+        page.config["wait_for_dom"] = True
+    else:
+        page.config["wait_for_dom"] = False
 
     print("\nПроводятся тесты...")
 
