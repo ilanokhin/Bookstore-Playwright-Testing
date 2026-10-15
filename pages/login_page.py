@@ -1,7 +1,8 @@
 import allure
 from playwright.sync_api import Page
-from pages.base_page import BasePage
+
 from elements.login_page_elements import LoginPageElements
+from pages.base_page import BasePage
 
 
 class LoginPage(BasePage):
