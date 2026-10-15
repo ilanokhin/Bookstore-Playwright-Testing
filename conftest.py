@@ -1,10 +1,12 @@
 import os
-import pytest
+
 import allure
+import pytest
 from faker import Faker
 from playwright.sync_api import sync_playwright, Page
+
+from config import TIMEOUT
 from tests.test_login_page import TestLoginPage
-from config import *
 
 
 def pytest_addoption(parser: pytest.Parser) -> None:

@@ -1,11 +1,12 @@
 import allure
 import pytest
-from pages.product_page import ProductPage
-from pages.basket_page import BasketPage
-from pages.login_page import LoginPage
-from elements.product_page_elements import ProductPageElements
+
 from elements.basket_page_elements import BasketPageElements
 from elements.login_page_elements import LoginPageElements
+from elements.product_page_elements import ProductPageElements
+from pages.basket_page import BasketPage
+from pages.login_page import LoginPage
+from pages.product_page import ProductPage
 
 
 @allure.sub_suite("Пользователь добавляет товар в корзину")

@@ -1,8 +1,10 @@
 import re
 import time
+
 from playwright.sync_api import Page, TimeoutError, Locator
+
+from config import TIMEOUT
 from enums.wait_until import WaitUntil
-from config import *
 
 
 class Element:

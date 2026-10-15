@@ -1,8 +1,10 @@
-import allure
 import math
+
+import allure
 from playwright.sync_api import Page
-from pages.base_page import BasePage
+
 from elements.product_page_elements import ProductPageElements
+from pages.base_page import BasePage
 
 
 class ProductPage(BasePage):

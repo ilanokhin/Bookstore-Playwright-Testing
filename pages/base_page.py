@@ -1,8 +1,10 @@
+from typing import Any, Callable
+
 import allure
 from playwright.sync_api import Page
-from typing import Any, Callable
+
 from base_element.element import Element
-from config import *
+from config import BASE_URL, TIMEOUT
 
 
 class BasePage:
