@@ -68,7 +68,9 @@ def browser_page(request: pytest.FixtureRequest) -> Page:
 
     print(f"\nЗапускается браузер {browser_name}...")
     page = context.new_page()
-    page.set_viewport_size(window_size)
+
+    if not headless:
+        page.set_viewport_size(window_size)
 
     if screenshot_every_time:
         page.config = {"screenshot_every_time": True}
