@@ -11,6 +11,8 @@ class Element:
         self.locator = locator
         self.timeout = timeout
         self.waiting = waiting
+        self.config = self.page.__dict__.get("config", {})
+        self.wait_for_dom = self.config.get("wait_for_dom", False)
 
     def __repr__(self) -> str:
         return f"\nЭлемент(локатор: '{self.locator}', таймаут ожидания: {self.timeout} сек)"
@@ -19,7 +21,10 @@ class Element:
         start_time = time.time()
 
         try:
-            self.page.wait_for_load_state("load", timeout=self.timeout * 1000)
+            if self.wait_for_dom:
+                self.page.wait_for_load_state("domcontentloaded", timeout=self.timeout * 1000)
+            else:
+                self.page.wait_for_load_state("load", timeout=self.timeout * 1000)
         except TimeoutError:
             return []
 
