@@ -39,7 +39,7 @@ jobs:
         run: |
           docker run --rm -v ${{ github.workspace }}:/docker/project python-playwright-chrome-testing:latest \
             /bin/sh -c "pytest --headless || pytest --lf --headless --reruns=1 --reruns-delay=15 \
-            --screenshot-every-time"
+            --screenshot-every-time --video"
 
       - name: Создание Allure отчёта
         if: always()

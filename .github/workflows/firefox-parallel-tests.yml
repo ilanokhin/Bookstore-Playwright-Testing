@@ -39,7 +39,7 @@ jobs:
         run: |
           docker run --rm -v ${{ github.workspace }}:/docker/project python-playwright-firefox-testing:latest \
             /bin/sh -c "pytest --headless --firefox -n=auto || pytest --lf --headless --firefox --reruns=2 \
-            --reruns-delay=15 --screenshot-every-time"
+            --reruns-delay=15 --screenshot-every-time --video"
 
       - name: Создание Allure отчёта
         if: always()
