@@ -13,7 +13,6 @@ def pytest_addoption(parser: pytest.Parser) -> None:
     parser.addoption("--headless", action="store_true", default=False, help="Запуск в фоновом режиме")
     parser.addoption("--disable-images", action="store_true", default=False, help="Отключить картинки")
     parser.addoption("--screenshot-every-time", action="store_true", default=False, help="Делать частые скриншоты")
-    parser.addoption("--wait-for-load", action="store_true", default=False, help="Дожидаться загрузки ресурсов")
     parser.addoption("--video", action="store_true", default=False, help="Записывать видео тестов")
 
 
@@ -24,7 +23,6 @@ def browser_page(request: pytest.FixtureRequest) -> Page:
     headless = request.config.getoption("--headless")
     images = not request.config.getoption("--disable-images")
     screenshot_every_time = request.config.getoption("--screenshot-every-time")
-    wait_for_load = request.config.getoption("--wait-for-load")
     video = request.config.getoption("--video") and not hasattr(request.config, 'workerinput')
 
     if safari:
@@ -74,11 +72,6 @@ def browser_page(request: pytest.FixtureRequest) -> Page:
         page.config = {"screenshot_every_time": True}
     else:
         page.config = {"screenshot_every_time": False}
-
-    if wait_for_load:
-        page.config["wait_for_load"] = True
-    else:
-        page.config["wait_for_load"] = False
 
     print("\nПроводятся тесты...")
 
