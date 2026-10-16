@@ -94,7 +94,7 @@ class Element:
 
     def get_attribute(self, attribute: str = "text") -> str:
         if attribute == "text":
-            attribute_value = self.get_elements()[0].text_content()
+            attribute_value = self.get_elements()[0].inner_text()
         else:
             attribute_value = self.get_elements()[0].get_attribute(attribute)
             attribute_value = attribute_value if attribute_value else ""
@@ -104,7 +104,7 @@ class Element:
 
     def get_attribute_list(self, attribute: str = "text") -> list:
         if attribute == "text":
-            attribute_list = [element.text_content() for element in self.get_elements()]
+            attribute_list = [element.inner_text() for element in self.get_elements()]
         else:
             attribute_list = []
 

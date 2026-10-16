@@ -13,7 +13,6 @@ def pytest_addoption(parser: pytest.Parser) -> None:
     parser.addoption("--firefox", action="store_true", default=False, help="Использовать браузер Mozilla Firefox")
     parser.addoption("--safari", action="store_true", default=False, help="Использовать браузер Apple Safari")
     parser.addoption("--headless", action="store_true", default=False, help="Запуск в фоновом режиме")
-    parser.addoption("--disable-images", action="store_true", default=False, help="Отключить картинки")
     parser.addoption("--screenshot-every-time", action="store_true", default=False, help="Делать частые скриншоты")
     parser.addoption("--wait-for-dom", action="store_true", default=False, help="Ждать только загрузки DOM")
     parser.addoption("--video", action="store_true", default=False, help="Записывать видео тестов")
@@ -24,7 +23,6 @@ def browser_page(request: pytest.FixtureRequest) -> Page:
     firefox = request.config.getoption("--firefox")
     safari = request.config.getoption("--safari")
     headless = request.config.getoption("--headless")
-    images = not request.config.getoption("--disable-images")
     screenshot_every_time = request.config.getoption("--screenshot-every-time")
     wait_for_dom = request.config.getoption("--wait-for-dom")
     video = request.config.getoption("--video") and not hasattr(request.config, 'workerinput')
@@ -54,19 +52,14 @@ def browser_page(request: pytest.FixtureRequest) -> Page:
     else:
         browser = playwright.chromium.launch(headless=headless, args=args)
 
-    headers = {"Accept-Encoding": "gzip, deflate"} if not images else {}
-    window_size = {"width": 1500, "height": 900}
-
     if video:
         temp_dir = "tmp"
         os.mkdir(temp_dir)
     else:
         temp_dir = None
 
-    context = browser.new_context(extra_http_headers=headers, record_video_dir=temp_dir, record_video_size=window_size)
-
-    if not images:
-        context.route("**/*.{png,jpg,jpeg,gif,svg,webp}", lambda route: route.abort())
+    window_size = {"width": 1500, "height": 900}
+    context = browser.new_context(record_video_dir=temp_dir, record_video_size=window_size)
 
     print(f"\nЗапускается браузер {browser_name}...")
     page = context.new_page()
