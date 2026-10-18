@@ -5,7 +5,6 @@ on:
 env:
   REGISTRY: ilanokhin
   IMAGE: python-playwright-firefox-testing:latest
-  PATH: ${{ github.workspace }}:/docker/project
 
 jobs:
   firefox-consecutive-tests:
@@ -23,14 +22,14 @@ jobs:
 
       - name: Запуск автотестов
         run: |
-          docker run --rm -v $PATH $IMAGE /bin/sh -c \
+          docker run --rm -v ${{ github.workspace }}:/docker/project $IMAGE /bin/sh -c \
           "pytest --headless --firefox || pytest --lf --headless --firefox --reruns=1 --reruns-delay=15 \
           --screenshot-every-time --video"
 
       - name: Создание Allure отчёта
         if: always()
         run: |
-          docker run --rm -v $PATH $IMAGE /bin/sh -c \
+          docker run --rm -v ${{ github.workspace }}:/docker/project $IMAGE /bin/sh -c \
           "allure generate allure-data -c --single-file; mv allure-report/index.html allure-report.html"
 
       - name: Выгрузка Allure отчёта
