@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   workflow_call:
 env:
-  REGISTRY: ilanokhin
+  REPOSITORY: ilanokhin
   IMAGE: python-playwright-firefox-testing:latest
 
 jobs:
@@ -17,8 +17,8 @@ jobs:
 
       - name: Загрузка образа с Docker Hub
         run: |
-          docker pull $REGISTRY/$IMAGE
-          docker tag $REGISTRY/$IMAGE $IMAGE
+          docker pull $REPOSITORY/$IMAGE
+          docker tag $REPOSITORY/$IMAGE $IMAGE
 
       - name: Запуск автотестов
         run: |
