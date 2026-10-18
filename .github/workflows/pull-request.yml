@@ -1,4 +1,4 @@
-name: Проверки при запросе на слияние
+name: Проверки при PR
 on:
   pull_request:
     branches:
