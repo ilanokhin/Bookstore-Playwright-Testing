@@ -1,0 +1,15 @@
+name: Проверки при запросе на слияние
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  chrome-parallel-tests:
+    uses: ./.github/workflows/chrome-parallel-tests.yml
+  firefox-parallel-tests:
+    uses: ./.github/workflows/firefox-parallel-tests.yml
+    needs: chrome-parallel-tests
+  safari-parallel-tests:
+    uses: ./.github/workflows/safari-parallel-tests.yml
+    needs: firefox-parallel-tests
