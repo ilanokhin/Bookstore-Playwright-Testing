@@ -4,9 +4,9 @@ on:
 env:
   REGISTRY: registry.gitlab.com
   REPOSITORY: ilanokhin/gitlab-bookstore-playwright-testing
-  CHROME_IMAGE: python-playwright-chrome-testing-gitlab:latest
-  FIREFOX_IMAGE: python-playwright-firefox-testing-gitlab:latest
-  SAFARI_IMAGE: python-playwright-safari-testing-gitlab:latest
+  CHROME_IMAGE: python-playwright-chrome-testing:latest
+  FIREFOX_IMAGE: python-playwright-firefox-testing:latest
+  SAFARI_IMAGE: python-playwright-safari-testing:latest
   TOKEN: ${{ secrets.GITLAB_REGISTRY_TOKEN }}
 
 jobs:
